@@ -84,4 +84,4 @@ document.querySelector('.pictures').appendChild(photosFragment);
 /* ------------------------------------------------------------------------------------------------------ */
 
 var readyPhotos = getArrayOfPhoto(getPhoto, photoList, createPhotoElements, NUMBERS_OBJECTS);
-
+photosFragment(readyPhotos, photoList);
