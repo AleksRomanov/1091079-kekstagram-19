@@ -30,7 +30,7 @@ var dataBase = function generateData() {
   for (var i = 1; i < constant.NUMBERS_OBJECTS + 1; i++) {
     data.push({
       url: 'photos/' + i + '.jpg',
-      likes: getRandomNumber(config.LIKES, config.LIKES),
+      likes: getRandomNumber(config.LIKES.MIN, config.LIKES.MAX),
       messages: generateMessages(),
       description: getRandomElement(constant.MESSAGES)
     });
