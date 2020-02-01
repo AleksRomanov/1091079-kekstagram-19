@@ -1,9 +1,9 @@
 'use strict';
 
-var ObjectsData = {
+var constant = {
   NUMBERS_OBJECTS: 25,
-  MIN_LIKES: 15,
-  MAX_LIKES: 200,
+  // MIN_LIKES: 15,
+  // MAX_LIKES: 200,
   MIN_AVATARS_COUNT: 1,
   MAX_AVATARS_COUNT: 6,
   MESSAGES: [
@@ -17,15 +17,22 @@ var ObjectsData = {
   USER_NAMES: ['Стас', 'Фёкла', 'Василий', 'Ашот', 'Лиза', 'Алексей']
 };
 
+var config = {
+  LIKES: {
+    MIN: 15,
+    MAX: 200,
+  }
+};
+
 // Функция, возвращает массив объектов записей
-function generateData() {
+var dataBase = function generateData() {
   var data = [];
-  for (var i = 1; i < ObjectsData.NUMBERS_OBJECTS + 1; i++) {
+  for (var i = 1; i < constant.NUMBERS_OBJECTS + 1; i++) {
     data.push({
       url: 'photos/' + i + '.jpg',
-      likes: getRandomNumber(ObjectsData.MIN_LIKES, ObjectsData.MAX_LIKES),
+      likes: getRandomNumber(config.LIKES, config.LIKES),
       messages: generateMessages(),
-      description: getRandomElement(ObjectsData.MESSAGES)
+      description: getRandomElement(constant.MESSAGES)
     });
   }
   return data;
@@ -34,13 +41,13 @@ function generateData() {
   function generateMessages() {
     var messages = [];
 
-    var countComments = getRandomNumber(ObjectsData.MIN_AVATARS_COUNT, ObjectsData.MAX_AVATARS_COUNT - 1);
+    var countComments = getRandomNumber(constant.MIN_AVATARS_COUNT, constant.MAX_AVATARS_COUNT - 1);
 
     for (var j = 0; j < countComments; j++) {
       messages.push({
-        avatar: generateSrcImage(ObjectsData.MIN_AVATARS_COUNT, ObjectsData.MAX_AVATARS_COUNT),
-        name: getRandomElement(ObjectsData.USER_NAMES),
-        message: getRandomElement(ObjectsData.MESSAGES)
+        avatar: generateSrcImage(constant.MIN_AVATARS_COUNT, constant.MAX_AVATARS_COUNT),
+        name: getRandomElement(constant.USER_NAMES),
+        message: getRandomElement(constant.MESSAGES)
       });
     }
     return messages;
@@ -61,9 +68,9 @@ function generateData() {
     var randomElement = array[randomIndex];
     return randomElement;
   }
-}
+};
 
-var listData = generateData();
+var listData = dataBase(5);
 
 // Галерея
 // Клонируем фотографии
@@ -71,12 +78,12 @@ function renderDataList(arrayPictures) {
   var picturesList = document.querySelector('.pictures'); // Ищем элемент в который мы будем вставлять наши изображения
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < arrayPictures.length; i++) {
-    fragment.appendChild(renderPicture(arrayPictures[i]));
+    fragment.appendChild(getPicture(arrayPictures[i]));
   }
   picturesList.appendChild(fragment);
 
   // Генерируем наш шаблон в документ
-  function renderPicture(image) {
+  function getPicture(image) {
     var picturesTemplate = document.querySelector('#picture').content; // Ищем шаблон который мы будем копировать.
     var picturesElement = picturesTemplate.cloneNode(true);
 
