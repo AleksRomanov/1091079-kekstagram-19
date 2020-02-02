@@ -2,10 +2,6 @@
 
 var constant = {
   NUMBERS_OBJECTS: 25,
-  // MIN_LIKES: 15,
-  // MAX_LIKES: 200,
-  MIN_AVATARS_COUNT: 1,
-  MAX_AVATARS_COUNT: 6,
   MESSAGES: [
     'Всё отлично!',
     'В целом всё неплохо. Но не всё.',
@@ -21,56 +17,60 @@ var config = {
   LIKES: {
     MIN: 15,
     MAX: 200,
+  },
+  AVATARS_COUNT: {
+    MIN: 1,
+    MAX: 6
   }
 };
 
 // Функция, возвращает массив объектов записей
-var dataBase = function generateData() {
+function generateMessages(minAvatarsCount, maxAvatarsCount) {
+  var messages = [];
+
+  var countComments = getRandomNumber(minAvatarsCount, maxAvatarsCount - 1);
+
+  for (var j = 0; j < countComments; j++) {
+    messages.push({
+      avatar: generateSrcImage(minAvatarsCount, maxAvatarsCount),
+      name: getRandomElement(constant.USER_NAMES),
+      message: getRandomElement(constant.MESSAGES)
+    });
+  }
+  return messages;
+}
+// Функция, возвращает url аватара
+function generateSrcImage(min, max) {
+  return 'img/avatar-' + getRandomNumber(min, max) + '.svg';
+}
+
+// Функция, возвращает случайное число в диапазоне
+function getRandomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Функция, возвращает случайный элемемент массива
+function getRandomElement(array) {
+  var randomIndex = getRandomNumber(1, array.length - 1);
+  var randomElement = array[randomIndex];
+  return randomElement;
+}
+
+// Функция, возвращает массив объектов записей
+function generateData(objectsCount) {
   var data = [];
-  for (var i = 1; i < constant.NUMBERS_OBJECTS + 1; i++) {
+  for (var i = 1; i < objectsCount + 1; i++) {
     data.push({
       url: 'photos/' + i + '.jpg',
       likes: getRandomNumber(config.LIKES.MIN, config.LIKES.MAX),
-      messages: generateMessages(),
+      messages: generateMessages(config.AVATARS_COUNT.MIN, config.AVATARS_COUNT.MAX),
       description: getRandomElement(constant.MESSAGES)
     });
   }
   return data;
+}
 
-  // Функция, возвращает массив объектов записей
-  function generateMessages() {
-    var messages = [];
-
-    var countComments = getRandomNumber(constant.MIN_AVATARS_COUNT, constant.MAX_AVATARS_COUNT - 1);
-
-    for (var j = 0; j < countComments; j++) {
-      messages.push({
-        avatar: generateSrcImage(constant.MIN_AVATARS_COUNT, constant.MAX_AVATARS_COUNT),
-        name: getRandomElement(constant.USER_NAMES),
-        message: getRandomElement(constant.MESSAGES)
-      });
-    }
-    return messages;
-  }
-  // Функция, возвращает url аватара
-  function generateSrcImage(min, max) {
-    return 'img/avatar-' + getRandomNumber(min, max) + '.svg';
-  }
-
-  // Функция, возвращает случайное число в диапазоне
-  function getRandomNumber(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  // Функция, возвращает случайный элемемент массива
-  function getRandomElement(array) {
-    var randomIndex = getRandomNumber(1, array.length - 1);
-    var randomElement = array[randomIndex];
-    return randomElement;
-  }
-};
-
-var listData = dataBase(5);
+var listData = generateData(constant.NUMBERS_OBJECTS);
 
 // Галерея
 // Клонируем фотографии
