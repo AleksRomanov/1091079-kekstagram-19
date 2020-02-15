@@ -197,6 +197,8 @@ var effectLevelLine = document.querySelector('.effect-level__line');
 var pinElement = document.querySelector('.effect-level__pin');
 var depthEffectLine = document.querySelector('.effect-level__depth');
 var effectLevelValue = document.querySelector('.effect-level__value');
+var hashTagsInput = document.querySelector('.text__hashtags');
+
 
 var DEFAULT_VALUE = 100;
 var currentScaleValue = DEFAULT_VALUE;
@@ -207,6 +209,51 @@ var levelPinCoordinates = null;
 var levelLineCoordinates = null;
 var startPosition = null;
 
+var getValidationHashTagsErrorMessage = function (hashTags, i) {
+  var message = '';
+  if (hashTags[i].charAt(0) === '') {
+    message = '';
+  } else if (hashTags[i].charAt(0) !== '#') {
+    message = 'Хеш-теги должны начинаться с "#"';
+  } else if (hashTags[i].length === 1) {
+    message = 'Хеш-теги должны состоять хотя бы из одного символа';
+  } else if (hashTags[i].indexOf('#', 1) > 0) {
+    message = 'Хеш-теги должны разделяться пробелами';
+  } else if (hashTags.indexOf(hashTags[i], i + 1) > 0) {
+    message = 'Один и тот же хэш-тег не может быть использован дважды';
+  } else if (hashTags[i].length > 20) {
+    message = 'Максимальная длина одного хэш-тега 20 символов';
+  }
+  return message;
+};
+
+var addValidationHashTags = function () {
+  var hashTags = hashTagsInput.value
+    .split(' ')
+    .map(function (hashTag) {
+      return hashTag.toLowerCase();
+    });
+  var message = '';
+
+  if (hashTags.length === 0) {
+    message = '';
+  } else if (hashTags.length === 5) {
+    message = 'Нельзя указать больше пяти хэш-тегов';
+  } else {
+    for (var i = 0; i < hashTags.length; i++) {
+      message = getValidationHashTagsErrorMessage(hashTags, i);
+      if (message) {
+        break;
+      }
+    }
+  }
+
+  hashTagsInput.setCustomValidity(message);
+};
+
+hashTagsInput.addEventListener('input', function () {
+  addValidationHashTags();
+});
 
 var openImageEditorPopup = function (imageEditor, closingKeyCode) {
   imageEditor.classList.remove('hidden');
