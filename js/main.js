@@ -149,9 +149,12 @@ var KEY_CODE = {
   SPACE: 32
 };
 
-var MIN_SCALE = 25;
-var MAX_SCALE = 100;
-var SCALE_STEP = 25;
+var SCALE = {
+  MIN: 25,
+  MAX: 100,
+  STEP: 25
+};
+
 var FILTER_EFFECTS = {
   none: '',
   chrome: 'effects__preview--chrome',
@@ -190,8 +193,8 @@ var FILTER_STYLES = {
 };
 
 var DEFAULT_VALUE = 100;
-var hashTagsLength = 5;
-var hashTagsLengthIndex = 20;
+var HASH_TAGS_LENGTH = 5;
+var HASH_TAGS_LENGTH_INDEX = 20;
 var uploadFileArea = pageBody.querySelector('#upload-file');
 var imageEditorForm = pageBody.querySelector('.img-upload__overlay');
 var imageBlock = pageBody.querySelector('.img-upload__preview');
@@ -226,7 +229,7 @@ var getValidationHashTagsErrorMessage = function (hashTags, i) {
     message = 'Хеш-теги должны разделяться пробелами';
   } else if (hashTags.indexOf(hashTags[i], i + 1) > 0) {
     message = 'Один и тот же хэш-тег не может быть использован дважды';
-  } else if (hashTags[i].length > hashTagsLengthIndex) {
+  } else if (hashTags[i].length > HASH_TAGS_LENGTH_INDEX) {
     message = 'Максимальная длина одного хэш-тега 20 символов';
   }
   return message;
@@ -242,7 +245,7 @@ var addValidationHashTags = function () {
 
   if (hashTags.length === 0) {
     message = '';
-  } else if (hashTags.length === hashTagsLength) {
+  } else if (hashTags.length > HASH_TAGS_LENGTH) {
     message = 'Нельзя указать больше пяти хэш-тегов';
   } else {
     for (var i = 0; i < hashTags.length; i++) {
@@ -434,30 +437,30 @@ elementPopupClose.addEventListener('keydown', function (evt) {
 });
 
 scaleDownButton.addEventListener('click', function () {
-  if (currentScaleValue > MIN_SCALE) {
-    onZoomOut(currentScaleValue, SCALE_STEP);
-    currentScaleValue -= SCALE_STEP;
+  if (currentScaleValue > SCALE.MIN) {
+    onZoomOut(currentScaleValue, SCALE.STEP);
+    currentScaleValue -= SCALE.STEP;
   }
 });
 
 scaleDownButton.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === KEY_CODE.SPACE && currentScaleValue > MIN_SCALE) {
-    onZoomOut(currentScaleValue, SCALE_STEP);
-    currentScaleValue -= SCALE_STEP;
+  if (evt.keyCode === KEY_CODE.SPACE && currentScaleValue > SCALE.MIN) {
+    onZoomOut(currentScaleValue, SCALE.STEP);
+    currentScaleValue -= SCALE.STEP;
   }
 });
 
 scaleUpButton.addEventListener('click', function () {
-  if (currentScaleValue < MAX_SCALE) {
-    onZoomIn(currentScaleValue, SCALE_STEP);
-    currentScaleValue += SCALE_STEP;
+  if (currentScaleValue < SCALE.MAX) {
+    onZoomIn(currentScaleValue, SCALE.STEP);
+    currentScaleValue += SCALE.STEP;
   }
 });
 
 scaleUpButton.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === KEY_CODE.SPACE && currentScaleValue < MAX_SCALE) {
-    onZoomIn(currentScaleValue, SCALE_STEP);
-    currentScaleValue += SCALE_STEP;
+  if (evt.keyCode === KEY_CODE.SPACE && currentScaleValue < SCALE.MAX) {
+    onZoomIn(currentScaleValue, SCALE.STEP);
+    currentScaleValue += SCALE.STEP;
   }
 });
 
@@ -469,9 +472,9 @@ pinElement.addEventListener('dragstart', function () {
 });
 
 scaleUpButton.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === KEY_CODE.SPACE && currentScaleValue < MAX_SCALE) {
-    onZoomIn(currentScaleValue, SCALE_STEP);
-    currentScaleValue += SCALE_STEP;
+  if (evt.keyCode === KEY_CODE.SPACE && currentScaleValue < SCALE.MAX) {
+    onZoomIn(currentScaleValue, SCALE.STEP);
+    currentScaleValue += SCALE.STEP;
   }
 });
 
