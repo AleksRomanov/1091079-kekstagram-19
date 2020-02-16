@@ -28,7 +28,7 @@ var dataRandomConfiguration = {
 var pageBody = document.querySelector('body');
 var picturesTemplate = pageBody.querySelector('#picture').content; // Ищем шаблон который мы будем копировать.
 // var socialCommentTemplate = pageBody.querySelector('.social__comments');
-var socialComment = pageBody.querySelector('.social__comment');
+// var socialComment = pageBody.querySelector('.social__comment');
 // var bigPicture = pageBody.querySelector('.big-picture');
 
 // Генерация и отрисовка картинок при загрузке страницы (3.6)
