@@ -1,4 +1,3 @@
-
 'use strict';
 
 var constant = {
@@ -146,13 +145,13 @@ renderDataList(data);
 
 var KEY_CODE = {
   ESC: 27,
-  SPACE: 32
+  SPACE: 32,
 };
 
 var SCALE = {
   MIN: 25,
   MAX: 100,
-  STEP: 25
+  STEP: 25,
 };
 
 var FILTER_EFFECTS = {
@@ -235,12 +234,20 @@ var getValidationHashTagsErrorMessage = function (hashTags, i) {
   return message;
 };
 
+// ????????
+
+// .map(function (hashTag) {
+//   return hashTag.toLowerCase();
+// });
+
 var addValidationHashTags = function () {
   var hashTags = hashTagsInput.value
     .split(' ')
-    .map(function (hashTag) {
-      return hashTag.toLowerCase();
+
+    .filter(function (tag) {
+      return tag !== '';
     });
+
   var message = '';
 
   if (hashTags.length === 0) {
