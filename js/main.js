@@ -236,7 +236,8 @@ var getValidationHashTagsErrorMessage = function (hashTags, i) {
 
 // ????????
 
-// .map(function (hashTag) {
+// .
+// map(function (hashTag) {
 //   return hashTag.toLowerCase();
 // });
 
@@ -244,8 +245,11 @@ var addValidationHashTags = function () {
   var hashTags = hashTagsInput.value
     .split(' ')
 
-    .filter(function (tag) {
-      return tag !== '';
+    .filter(function (hashTag) {
+      return hashTag !== '';
+    })
+    .map(function (hashTag) {
+      return hashTag.toLowerCase();
     });
 
   var message = '';
