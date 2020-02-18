@@ -209,6 +209,7 @@ var imageEditorForm = pageBody.querySelector('.img-upload__overlay');
 var imageBlock = pageBody.querySelector('.img-upload__preview');
 var imagePreview = imageBlock.children[0];
 var elementPopupClose = pageBody.querySelector('#upload-cancel');
+// var bigPictureCloseElement = pageBody.querySelector('#big-picture__cancel');
 var scaleDownButton = pageBody.querySelector('.scale__control--smaller');
 var scaleUpButton = pageBody.querySelector('.scale__control--bigger');
 var effectLevelLine = pageBody.querySelector('.effect-level__line');
