@@ -217,6 +217,7 @@ var pinElement = pageBody.querySelector('.effect-level__pin');
 var depthEffectLine = pageBody.querySelector('.effect-level__depth');
 var effectLevelValue = pageBody.querySelector('.effect-level__value');
 var hashTagsInput = pageBody.querySelector('.text__hashtags');
+var ESC_KEY = 'Escape';
 
 var currentScaleValue = DEFAULT_VALUE;
 var currentEffectLevel = DEFAULT_VALUE;
@@ -228,7 +229,7 @@ var startPosition = null;
 var effectLevelBlock = pageBody.querySelector('.effect-level');
 
 var onPictureEscPress = function (evt) {
-  if (evt.key === KEY_CODE.ESC) {
+  if (evt.key === ESC_KEY) {
     closeBigPicture();
   }
 };
