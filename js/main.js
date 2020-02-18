@@ -134,6 +134,7 @@ function showBigPicture(element) {
 
   bigPicture.classList.remove('hidden');
   pageBody.classList.add('modal-open');
+  pageBody.addEventListener('keydown', onPictureEscPress);
 }
 
 function setBigPictureBehavior() {
@@ -209,7 +210,6 @@ var imageEditorForm = pageBody.querySelector('.img-upload__overlay');
 var imageBlock = pageBody.querySelector('.img-upload__preview');
 var imagePreview = imageBlock.children[0];
 var elementPopupClose = pageBody.querySelector('#upload-cancel');
-// var bigPictureCloseElement = pageBody.querySelector('#big-picture__cancel');
 var scaleDownButton = pageBody.querySelector('.scale__control--smaller');
 var scaleUpButton = pageBody.querySelector('.scale__control--bigger');
 var effectLevelLine = pageBody.querySelector('.effect-level__line');
@@ -226,6 +226,24 @@ var levelPinCoordinates = null;
 var levelLineCoordinates = null;
 var startPosition = null;
 var effectLevelBlock = pageBody.querySelector('.effect-level');
+
+var onPictureEscPress = function (evt) {
+  if (evt.key === KEY_CODE.ESC) {
+    closeBigPicture();
+  }
+};
+
+var pictureClose = document.querySelector('#picture-cancel');
+pictureClose.addEventListener('click', onPictureCloseClick);
+function onPictureCloseClick() {
+  closeBigPicture();
+}
+
+var closeBigPicture = function () {
+  document.removeEventListener('keydown', onPictureEscPress);
+  bigPicture.classList.add('hidden');
+  pageBody.classList.remove('modal-open');
+};
 
 var getValidationHashTagsErrorMessage = function (hashTags, i) {
   var message = '';
@@ -445,10 +463,6 @@ uploadFileArea.addEventListener('change', function () {
 elementPopupClose.addEventListener('click', function () {
   closeImageEditorPopup(imageEditorForm, KEY_CODE.ESC);
 });
-
-// bigPictureCloseElement.addEventListener('click', function () {
-//   closeBigPicturePopup(imageEditorForm, KEY_CODE.ESC);
-// });
 
 elementPopupClose.addEventListener('keydown', function (evt) {
   if (evt.keyCode === KEY_CODE.SPACE) {
