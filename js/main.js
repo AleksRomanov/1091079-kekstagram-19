@@ -26,9 +26,9 @@ var dataRandomConfiguration = {
 
 var pageBody = document.querySelector('body');
 var picturesTemplate = pageBody.querySelector('#picture').content; // Ищем шаблон который мы будем копировать.
-// var socialCommentTemplate = pageBody.querySelector('.social__comments');
-// var socialComment = pageBody.querySelector('.social__comment');
-// var bigPicture = pageBody.querySelector('.big-picture');
+var socialCommentTemplate = pageBody.querySelector('.social__comments');
+var socialComment = pageBody.querySelector('.social__comment');
+var bigPicture = pageBody.querySelector('.big-picture');
 
 // Генерация и отрисовка картинок при загрузке страницы (3.6)
 
@@ -92,53 +92,64 @@ function renderDataList(arrayPictures) {
   return picturesList.appendChild(fragment);
 }
 
-// function getCommentElement(element) {
-//   var commentItemCopy = socialComment.cloneNode(true);
-//   var socialCommentImg = commentItemCopy.querySelector('img');
-//   var socialText = commentItemCopy.querySelector('.social__text');
-//   socialCommentImg.src = element.avatar;
-//   socialCommentImg.alt = element.name;
-//   socialText.textContent = element.message;
-//
-//   return commentItemCopy;
-// }
+function getCommentElement(element) {
+  var commentItemCopy = socialComment.cloneNode(true);
+  var socialCommentImg = commentItemCopy.querySelector('img');
+  var socialText = commentItemCopy.querySelector('.social__text');
+  socialCommentImg.src = element.avatar;
+  socialCommentImg.alt = element.name;
+  socialText.textContent = element.message;
+
+  return commentItemCopy;
+}
 
 // Генерация и отрисовка попапа с большим изображением при загрузке страницы: (3.7)
 
-// function showNewComments(element) {
-//   var commentsCount = bigPicture.querySelector('.comments-count');
-//
-//   commentsCount.textContent = element.messages.length;
-//   var fragment = document.createDocumentFragment();
-//   for (var i = 0; i < element.messages.length; i++) {
-//     fragment.appendChild(getCommentElement(element.messages[i]));
-//   }
-//   socialCommentTemplate.innerHTML = '';
-//   socialCommentTemplate.appendChild(fragment);
-// }
+function showNewComments(element) {
+  var commentsCount = bigPicture.querySelector('.comments-count');
 
-// function showBigPicture(element) {
-//   var bigPictureImg = bigPicture.querySelector('img');
-//   var likesCount = bigPicture.querySelector('.likes-count');
-//   var socialCaption = pageBody.querySelector('.social__caption');
-//   var socialCommentCount = pageBody.querySelector('.social__comment-count');
-//   var commentsLoader = pageBody.querySelector('.comments-loader');
-//
-//
-//   bigPictureImg.src = element.url;
-//   likesCount.textContent = element.likes;
-//   showNewComments(element);
-//   socialCaption.textContent = element.description;
-//   socialCommentCount.classList.add('hidden');
-//   commentsLoader.classList.add('hidden');
-//
-//   bigPicture.classList.remove('hidden');
-//   pageBody.classList.add('modal-open');
-// }
+  commentsCount.textContent = element.messages.length;
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < element.messages.length; i++) {
+    fragment.appendChild(getCommentElement(element.messages[i]));
+  }
+  socialCommentTemplate.innerHTML = '';
+  socialCommentTemplate.appendChild(fragment);
+}
+
+function showBigPicture(element) {
+  var bigPictureImg = bigPicture.querySelector('img');
+  var likesCount = bigPicture.querySelector('.likes-count');
+  var socialCaption = pageBody.querySelector('.social__caption');
+  var socialCommentCount = pageBody.querySelector('.social__comment-count');
+  var commentsLoader = pageBody.querySelector('.comments-loader');
+
+
+  bigPictureImg.src = element.url;
+  likesCount.textContent = element.likes;
+  showNewComments(element);
+  socialCaption.textContent = element.description;
+  socialCommentCount.classList.add('hidden');
+  commentsLoader.classList.add('hidden');
+
+  bigPicture.classList.remove('hidden');
+  pageBody.classList.add('modal-open');
+  pageBody.addEventListener('keydown', onPictureEscPress);
+}
+
+function setBigPictureBehavior() {
+  var smallPictures = pageBody.querySelectorAll('.picture');
+
+  smallPictures.forEach(function (picture, index) {
+    picture.addEventListener('click', function () {
+      showBigPicture(data[index]);
+    });
+  });
+}
 
 var data = generateData(constant.NUMBERS_OBJECTS);
 renderDataList(data);
-
+setBigPictureBehavior();
 // showBigPicture(data[1);
 
 // 4.9.
@@ -206,6 +217,7 @@ var pinElement = pageBody.querySelector('.effect-level__pin');
 var depthEffectLine = pageBody.querySelector('.effect-level__depth');
 var effectLevelValue = pageBody.querySelector('.effect-level__value');
 var hashTagsInput = pageBody.querySelector('.text__hashtags');
+var ESC_KEY = 'Escape';
 
 var currentScaleValue = DEFAULT_VALUE;
 var currentEffectLevel = DEFAULT_VALUE;
@@ -215,6 +227,24 @@ var levelPinCoordinates = null;
 var levelLineCoordinates = null;
 var startPosition = null;
 var effectLevelBlock = pageBody.querySelector('.effect-level');
+
+var onPictureEscPress = function (evt) {
+  if (evt.key === ESC_KEY) {
+    closeBigPicture();
+  }
+};
+
+var pictureClose = document.querySelector('#picture-cancel');
+pictureClose.addEventListener('click', onPictureCloseClick);
+function onPictureCloseClick() {
+  closeBigPicture();
+}
+
+var closeBigPicture = function () {
+  document.removeEventListener('keydown', onPictureEscPress);
+  bigPicture.classList.add('hidden');
+  pageBody.classList.remove('modal-open');
+};
 
 var getValidationHashTagsErrorMessage = function (hashTags, i) {
   var message = '';
@@ -233,13 +263,6 @@ var getValidationHashTagsErrorMessage = function (hashTags, i) {
   }
   return message;
 };
-
-// ????????
-
-// .
-// map(function (hashTag) {
-//   return hashTag.toLowerCase();
-// });
 
 var addValidationHashTags = function () {
   var hashTags = hashTagsInput.value
@@ -441,6 +464,7 @@ uploadFileArea.addEventListener('change', function () {
 elementPopupClose.addEventListener('click', function () {
   closeImageEditorPopup(imageEditorForm, KEY_CODE.ESC);
 });
+
 elementPopupClose.addEventListener('keydown', function (evt) {
   if (evt.keyCode === KEY_CODE.SPACE) {
     closeImageEditorPopup(imageEditorForm, KEY_CODE.ESC);
