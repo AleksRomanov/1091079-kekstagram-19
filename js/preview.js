@@ -1,8 +1,8 @@
 'use strict';
 
 (function () {
-  var bigPicture = window.form.pageBody.querySelector('.big-picture');
   var ESC_KEY = 'Escape';
+  var bigPicture = window.form.pageBody.querySelector('.big-picture');
   var socialCommentTemplate = window.form.pageBody.querySelector('.social__comments');
   var socialComment = window.form.pageBody.querySelector('.social__comment');
   var pictureClose = document.querySelector('#picture-cancel');
