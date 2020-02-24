@@ -28,7 +28,6 @@
 
   function getPicture(image) {
     var picturesElement = picturesTemplate.cloneNode(true);
-
     picturesElement.querySelector('.picture__img').src = image.url;
     picturesElement.querySelector('.picture__likes').textContent = image.likes;
     picturesElement.querySelector('.picture__comments').textContent = image.messages.length;
