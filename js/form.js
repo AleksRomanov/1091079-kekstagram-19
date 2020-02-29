@@ -51,6 +51,7 @@
     phobos: 'effects__preview--phobos',
     heat: 'effects__preview--heat',
   };
+  var saveUrl = 'https://js.dump.academy/kekstagram';
   var pageBody = document.querySelector('body');
   var mainContainer = pageBody.querySelector('main');
   var selectedFilter = null;
@@ -431,7 +432,7 @@
   imageUploadForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
     var data = new FormData(imageUploadForm);
-    window.backend.save(data, onSuccess, onError);
+    window.backend.save(saveUrl, data, onSuccess, onError);
   });
 
   window.form = {

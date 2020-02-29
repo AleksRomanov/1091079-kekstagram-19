@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var loadUrl = 'https://js.dump.academy/kekstagram/data';
   var picturesTemplate = document.querySelector('#picture').content;
 
   function getPicture(image) {
@@ -41,7 +42,7 @@
     window.preview.setBigPictureBehavior(pictures);
   };
 
-  window.backend.load(successHandler, errorHandler);
+  window.backend.load(loadUrl, successHandler, errorHandler);
 
   window.data = {
     pictures: pictures,

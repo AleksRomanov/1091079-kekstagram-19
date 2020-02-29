@@ -1,15 +1,17 @@
 'use strict';
 
 (function () {
+  var XHR_SERVER = {
+    STATUS: 200,
+    TIMEOUT: 10000,
+  };
   var backend = {
-    load: function (onSuccess, onError) {
-      var URL = 'https://js.dump.academy/kekstagram/data';
-      createRequest('GET', URL, onSuccess, onError);
+    load: function (url, onSuccess, onError) {
+      createRequest('GET', url, onSuccess, onError);
     },
 
-    save: function (data, onSuccess, onError) {
-      var URL = 'https://js.dump.academy/kekstagram';
-      createRequest('POST', URL, onSuccess, onError, data);
+    save: function (url, data, onSuccess, onError) {
+      createRequest('POST', url, onSuccess, onError, data);
     },
   };
 
@@ -18,7 +20,7 @@
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === XHR_SERVER.STATUS) {
         onSuccess(xhr.response);
       } else {
         onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
@@ -30,7 +32,7 @@
     xhr.addEventListener('timeout', function () {
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
-    xhr.timeout = 10000;
+    xhr.timeout = XHR_SERVER.TIMEOUT;
     xhr.open(method, url);
     xhr.send(data);
   };
