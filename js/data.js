@@ -41,7 +41,7 @@
     window.preview.setBigPictureBehavior(pictures);
   };
 
-  window.backend.load(window.backend.load(successHandler, errorHandler));
+  window.backend.load(successHandler, errorHandler);
 
   window.data = {
     pictures: pictures,

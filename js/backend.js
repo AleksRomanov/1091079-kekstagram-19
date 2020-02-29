@@ -7,10 +7,10 @@
       createRequest('GET', URL, onSuccess, onError);
     },
 
-    // save: function (data, onSuccess, onError) {
-    //   var URL = 'https://js.dump.academy/kekstagram';
-    //   createRequest('POST', URL, onSuccess, onError, data);
-    // },
+    save: function (data, onSuccess, onError) {
+      var URL = 'https://js.dump.academy/kekstagram';
+      createRequest('POST', URL, onSuccess, onError, data);
+    },
   };
 
   var createRequest = function (method, url, onSuccess, onError, data) {
