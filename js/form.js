@@ -131,12 +131,12 @@
   };
 
   elementPopupClose.addEventListener('click', function () {
-    closeImageEditorPopup(imageEditorPopup, KEY_CODE.ESC);
+    closeImageEditorPopup(imageEditorPopup, isEscEvent);
   });
 
   elementPopupClose.addEventListener('keydown', function (evt) {
     if (evt.keyCode === KEY_CODE.SPACE) {
-      closeImageEditorPopup(imageEditorPopup, KEY_CODE.ESC);
+      closeImageEditorPopup(imageEditorPopup, isEscEvent);
     }
   });
 
@@ -364,12 +364,12 @@
 
   var onSuccessMessageEscPress = function (evt) {
     var successMessage = pageBody.querySelector('.success');
-    closeOnPressKey(evt, successMessage, KEY_CODE.ESC);
+    closeOnPressKey(evt, successMessage, isEscEvent);
     isEscEvent(evt, removeWindowSuccessUpload);
   };
 
   var onSuccess = function () {
-    closeImageEditorPopup(imageEditorPopup, KEY_CODE.ESC);
+    closeImageEditorPopup(imageEditorPopup, isEscEvent);
     imageUploadForm.reset();
     showUploadStatusMessage('success');
     var successButton = pageBody.querySelector('.success__button');
@@ -402,7 +402,7 @@
   };
 
   var onError = function () {
-    closeImageEditorPopup(imageEditorPopup, KEY_CODE.ESC);
+    closeImageEditorPopup(imageEditorPopup, isEscEvent);
     showUploadStatusMessage('error');
     var errorButton = document.querySelector('.error__button');
     var errorOverlay = document.querySelector('.error');
@@ -410,7 +410,7 @@
     mainContainer.addEventListener('click', onErrorWindowOutsideCLick);
     document.addEventListener('keydown', onErrorMessageEscPress);
     errorButton.addEventListener('click', function () {
-      openImageEditorPopup(imageEditorPopup, KEY_CODE.ESC);
+      openImageEditorPopup(imageEditorPopup, isEscEvent);
       errorOverlay.remove();
     });
   };
@@ -426,7 +426,7 @@
     addValidationHashTags();
   });
   uploadFileArea.addEventListener('change', function () {
-    openImageEditorPopup(imageEditorPopup, KEY_CODE.ESC);
+    openImageEditorPopup(imageEditorPopup, isEscEvent);
   });
 
   imageUploadForm.addEventListener('submit', function (evt) {
