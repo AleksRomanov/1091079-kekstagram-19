@@ -51,7 +51,9 @@
     phobos: 'effects__preview--phobos',
     heat: 'effects__preview--heat',
   };
+  var saveUrl = 'https://js.dump.academy/kekstagram';
   var pageBody = document.querySelector('body');
+  var mainContainer = pageBody.querySelector('main');
   var selectedFilter = null;
   var currentEffectLevel = DEFAULT_VALUE;
   var imageBlock = pageBody.querySelector('.img-upload__preview');
@@ -60,6 +62,7 @@
   var effectLevelValue = pageBody.querySelector('.effect-level__value');
   var depthEffectLine = pageBody.querySelector('.effect-level__depth');
   var pinElement = pageBody.querySelector('.effect-level__pin');
+  var imageUploadForm = pageBody.querySelector('.img-upload__form');
   var startPosition = null;
   var levelPinCoordinates = null;
   var levelLineCoordinates = null;
@@ -69,7 +72,7 @@
   var uploadFileArea = pageBody.querySelector('#upload-file');
   var scaleUpButton = pageBody.querySelector('.scale__control--bigger');
   var scaleDownButton = pageBody.querySelector('.scale__control--smaller');
-  var imageEditorForm = pageBody.querySelector('.img-upload__overlay');
+  var imageEditorPopup = pageBody.querySelector('.img-upload__overlay');
   var elementPopupClose = pageBody.querySelector('#upload-cancel');
   var hashTagsInput = pageBody.querySelector('.text__hashtags');
 
@@ -128,12 +131,12 @@
   };
 
   elementPopupClose.addEventListener('click', function () {
-    closeImageEditorPopup(imageEditorForm, KEY_CODE.ESC);
+    closeImageEditorPopup(imageEditorPopup, KEY_CODE.ESC);
   });
 
   elementPopupClose.addEventListener('keydown', function (evt) {
     if (evt.keyCode === KEY_CODE.SPACE) {
-      closeImageEditorPopup(imageEditorForm, KEY_CODE.ESC);
+      closeImageEditorPopup(imageEditorPopup, KEY_CODE.ESC);
     }
   });
 
@@ -324,6 +327,93 @@
     return false;
   };
 
+  var showUploadStatusMessage = function (classNameMessage) {
+    var messageTemplate = pageBody.querySelector('#' + classNameMessage)
+      .content.querySelector('.' + classNameMessage)
+      .cloneNode(true);
+    mainContainer.appendChild(messageTemplate);
+  };
+  var isClickOutside = function (evt, cssSelector) {
+    var target = evt.target;
+    var element = target.closest(cssSelector);
+
+    return !element;
+  };
+
+  var onSuccessWindowOutsideCLick = function (evt) {
+    if (isClickOutside(evt, '.success__inner')) {
+      removeWindowSuccessUpload();
+    }
+    mainContainer.removeEventListener('click', onSuccessWindowOutsideCLick);
+  };
+
+  var removeWindowSuccessUpload = function () {
+    var successMessage = pageBody.querySelector('.success');
+
+    successMessage.remove();
+
+    mainContainer.removeEventListener('click', onSuccessWindowOutsideCLick);
+    document.removeEventListener('keydown', onSuccessMessageEscPress);
+  };
+
+  var isEscEvent = function (evt, action) {
+    if (evt.keyCode === KEY_CODE.ESC) {
+      action();
+    }
+  };
+
+  var onSuccessMessageEscPress = function (evt) {
+    var successMessage = pageBody.querySelector('.success');
+    closeOnPressKey(evt, successMessage, KEY_CODE.ESC);
+    isEscEvent(evt, removeWindowSuccessUpload);
+  };
+
+  var onSuccess = function () {
+    closeImageEditorPopup(imageEditorPopup, KEY_CODE.ESC);
+    imageUploadForm.reset();
+    showUploadStatusMessage('success');
+    var successButton = pageBody.querySelector('.success__button');
+    mainContainer.addEventListener('click', onSuccessWindowOutsideCLick);
+    successButton.addEventListener('click', removeWindowSuccessUpload);
+    document.addEventListener('keydown', onSuccessMessageEscPress);
+  };
+
+  var onErrorWindowOutsideCLick = function (evt) {
+    if (isClickOutside(evt, '.error__inner')) {
+      removeWindowErrorUpload();
+      imageUploadForm.reset();
+      mainContainer.removeEventListener('click', onErrorWindowOutsideCLick);
+    }
+
+    mainContainer.removeEventListener('click', onErrorWindowOutsideCLick);
+  };
+
+  var removeWindowErrorUpload = function () {
+    var errorMessage = document.querySelector('.error');
+
+    errorMessage.remove();
+    mainContainer.removeEventListener('click', onErrorWindowOutsideCLick);
+    document.removeEventListener('keydown', onSuccessMessageEscPress);
+  };
+
+  var onErrorMessageEscPress = function (evt) {
+    isEscEvent(evt, removeWindowErrorUpload);
+    imageUploadForm.reset();
+  };
+
+  var onError = function () {
+    closeImageEditorPopup(imageEditorPopup, KEY_CODE.ESC);
+    showUploadStatusMessage('error');
+    var errorButton = document.querySelector('.error__button');
+    var errorOverlay = document.querySelector('.error');
+
+    mainContainer.addEventListener('click', onErrorWindowOutsideCLick);
+    document.addEventListener('keydown', onErrorMessageEscPress);
+    errorButton.addEventListener('click', function () {
+      openImageEditorPopup(imageEditorPopup, KEY_CODE.ESC);
+      errorOverlay.remove();
+    });
+  };
   setFilterPanelBehavior();
 
   pinElement.addEventListener('mousedown', onSliderMouseDown);
@@ -336,7 +426,13 @@
     addValidationHashTags();
   });
   uploadFileArea.addEventListener('change', function () {
-    openImageEditorPopup(imageEditorForm, KEY_CODE.ESC);
+    openImageEditorPopup(imageEditorPopup, KEY_CODE.ESC);
+  });
+
+  imageUploadForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    var data = new FormData(imageUploadForm);
+    window.backend.save(saveUrl, data, onSuccess, onError);
   });
 
   window.form = {
