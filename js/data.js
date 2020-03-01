@@ -127,7 +127,7 @@
   };
 
   var sortAndRenderImages = window.debfunction.debounce(function (sortedArr) {
-    renderDataList(sortedArr);
+    renderImages(sortedArr);
   });
 
   window.backend.load(loadUrl, successHandler, errorHandler);
