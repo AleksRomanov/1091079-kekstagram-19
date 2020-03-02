@@ -3,6 +3,8 @@
 (function () {
   var loadUrl = 'https://js.dump.academy/kekstagram/data';
   var picturesTemplate = document.querySelector('#picture').content;
+  var picturesList = document.querySelector('.pictures');
+  var filterSection = document.querySelector('.img-filters');
 
   function getPicture(image) {
     var picturesElement = picturesTemplate.cloneNode(true);
@@ -13,15 +15,12 @@
   }
 
   function renderDataList(arrayPictures) {
-    var picturesList = document.querySelector('.pictures');
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < arrayPictures.length; i++) {
       fragment.appendChild(getPicture(arrayPictures[i]));
     }
     return picturesList.appendChild(fragment);
   }
-
-  var pictures = [];
 
   var errorHandler = function (errorMessage) {
     var errorBlock = document.createElement('div');
@@ -37,14 +36,16 @@
   };
 
   var successHandler = function (data) {
-    pictures = data;
-    renderDataList(pictures);
-    window.preview.setBigPictureBehavior(pictures);
+    window.pictures = data;
+    renderDataList(window.pictures);
+    window.preview.setBigPictureBehavior(window.pictures);
+    filterSection.classList.remove('img-filters--inactive');
   };
 
   window.backend.load(loadUrl, successHandler, errorHandler);
 
   window.data = {
-    pictures: pictures,
+    renderDataList: renderDataList,
+    picturesList: picturesList,
   };
 })();
