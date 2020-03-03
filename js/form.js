@@ -453,11 +453,6 @@
     }
     openImageEditorPopup(imageEditorPopup, isEscEvent);
 
-    // window.preview.resetFilters();
-    // window.utils.showHiddenBlock(imageEditorOverlay);
-    // imageEditorCloseElement.addEventListener('click', onEditFormCloseElementClick);
-    // document.addEventListener('keydown', onEditFormEscPress);
-
     return true;
   });
 
