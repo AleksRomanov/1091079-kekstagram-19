@@ -51,12 +51,16 @@
     phobos: 'effects__preview--phobos',
     heat: 'effects__preview--heat',
   };
+
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+
   var saveUrl = 'https://js.dump.academy/kekstagram';
   var pageBody = document.querySelector('body');
   var mainContainer = pageBody.querySelector('main');
   var selectedFilter = null;
   var currentEffectLevel = DEFAULT_VALUE;
   var imageBlock = pageBody.querySelector('.img-upload__preview');
+  var imgPreviewElement = imageBlock.querySelector('img');
   var imagePreview = imageBlock.children[0];
   var effectLevelBlock = pageBody.querySelector('.effect-level');
   var effectLevelValue = pageBody.querySelector('.effect-level__value');
@@ -425,8 +429,36 @@
   hashTagsInput.addEventListener('input', function () {
     addValidationHashTags();
   });
-  uploadFileArea.addEventListener('change', function () {
+
+
+  uploadFileArea.addEventListener('change', function (evt) {
+    var fileName = evt.target.value.toLowerCase();
+    var file = uploadFileArea.files[0];
+
+
+    var fileFormatMatches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+
+    if (!fileFormatMatches) {
+      return false;
+    } else {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function () {
+        imgPreviewElement.src = reader.result;
+      });
+
+      reader.readAsDataURL(file);
+    }
     openImageEditorPopup(imageEditorPopup, isEscEvent);
+
+    // window.preview.resetFilters();
+    // window.utils.showHiddenBlock(imageEditorOverlay);
+    // imageEditorCloseElement.addEventListener('click', onEditFormCloseElementClick);
+    // document.addEventListener('keydown', onEditFormEscPress);
+
+    return true;
   });
 
   imageUploadForm.addEventListener('submit', function (evt) {
@@ -437,6 +469,7 @@
 
   window.form = {
     pageBody: pageBody,
+    imageBlock: imageBlock,
   };
 })();
 
