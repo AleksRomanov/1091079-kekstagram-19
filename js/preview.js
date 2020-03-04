@@ -89,7 +89,6 @@
 
     bigPictureImg.src = element.url;
     likesCount.textContent = element.likes;
-    // showNewComments(element);
     socialCaption.textContent = element.description;
 
     bigPicture.classList.remove('hidden');
