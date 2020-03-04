@@ -113,8 +113,6 @@
   var resetIndex = function () {
     commentIndex = 0;
   };
-
-
   pictureClose.addEventListener('click', onPictureCloseClick);
   window.preview = {
     setBigPictureBehavior: setBigPictureBehavior,
