@@ -51,3 +51,4 @@
     it.addEventListener('click', onFilterClick);
   });
 })();
+
