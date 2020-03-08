@@ -77,16 +77,16 @@
   });
 
   var closeImageEditorPopup = function (imageEditor, closingKeyCode) {
-    window.filters.hideElement(imageEditor);
+    window.utils.hideElement(imageEditor);
     document.removeEventListener('keydown', function (evt) {
       window.utils.closeOnPressKey(evt, imageEditor, closingKeyCode);
     });
-    window.filters.resetFilters();
+    window.filters.resetSettings();
     clearForm();
   };
 
   var openImageEditorPopup = function (imageEditor, closingKeyCode) {
-    window.filters.showElement(imageEditor);
+    window.utils.showElement(imageEditor);
     document.addEventListener('keydown', function (evt) {
       window.utils.closeOnPressKey(evt, imageEditor, closingKeyCode);
     });

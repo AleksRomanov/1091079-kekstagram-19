@@ -141,7 +141,7 @@
     image.style.transform = 'scale(' + value / 100 + ')';
   };
 
-  var resetFilters = function () {
+  var resetSettings = function () {
     selectedFilter = null;
     imagePreview.className = '';
     currentScaleValue = DEFAULT_VALUE;
@@ -171,27 +171,19 @@
     }
   };
 
-  function showElement(element) {
-    element.classList.remove('hidden');
-  }
-
-  function hideElement(element) {
-    element.classList.add('hidden');
-  }
-
   var setFilterVisible = function (isVisible) {
     if (isVisible) {
-      showElement(effectLevelBlock);
+      window.utils.showElement(effectLevelBlock);
       resetFilterDuration();
     } else {
-      hideElement(effectLevelBlock);
+      window.utils.hideElement(effectLevelBlock);
     }
   };
   var onFilterChange = function (filter) {
     selectedFilter = filter.value;
 
     if (selectedFilter === 'none') {
-      resetFilters();
+      resetSettings();
       setFilterVisible(false);
     } else {
       setFilterVisible(true);
@@ -241,8 +233,8 @@
   });
 
   window.filters = {
-    resetFilters: resetFilters,
-    showElement: showElement,
-    hideElement: hideElement,
+    resetSettings: resetSettings,
+    // showElement: showElement,
+    // hideElement: hideElement,
   };
 })();
