@@ -4,9 +4,9 @@
   var COMMENTS_COUNT = 5;
 
   var ESC_KEY = 'Escape';
-  var bigPicture = window.form.pageBody.querySelector('.big-picture');
-  var socialCommentTemplate = window.form.pageBody.querySelector('.social__comments');
-  var socialComment = window.form.pageBody.querySelector('.social__comment');
+  var bigPicture = window.utils.pageBody.querySelector('.big-picture');
+  var socialCommentTemplate = window.utils.pageBody.querySelector('.social__comments');
+  var socialComment = window.utils.pageBody.querySelector('.social__comment');
   var pictureClose = document.querySelector('#picture-cancel');
   var commentsLoaderButton = bigPicture.querySelector('.comments-loader');
   var comments;
@@ -33,7 +33,7 @@
   var closeBigPicture = function () {
     document.removeEventListener('keydown', onPictureEscPress);
     bigPicture.classList.add('hidden');
-    window.form.pageBody.classList.remove('modal-open');
+    window.utils.pageBody.classList.remove('modal-open');
     resetIndex();
   };
 
@@ -79,7 +79,7 @@
   function showBigPicture(element) {
     var bigPictureImg = bigPicture.querySelector('img');
     var likesCount = bigPicture.querySelector('.likes-count');
-    var socialCaption = window.form.pageBody.querySelector('.social__caption');
+    var socialCaption = window.utils.pageBody.querySelector('.social__caption');
     commentsLoaderButton.addEventListener('click', onLoaderCommentsClick);
     comments = element.comments;
 
@@ -92,8 +92,8 @@
     socialCaption.textContent = element.description;
 
     bigPicture.classList.remove('hidden');
-    window.form.pageBody.classList.add('modal-open');
-    window.form.pageBody.addEventListener('keydown', onPictureEscPress);
+    window.utils.pageBody.classList.add('modal-open');
+    window.utils.pageBody.addEventListener('keydown', onPictureEscPress);
   }
 
   function setBigPictureBehavior(data) {
@@ -113,8 +113,6 @@
   var resetIndex = function () {
     commentIndex = 0;
   };
-
-
   pictureClose.addEventListener('click', onPictureCloseClick);
   window.preview = {
     setBigPictureBehavior: setBigPictureBehavior,
