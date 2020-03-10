@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var loadUrl = 'https://js.dump.academy/kekstagram/data';
+  var LOAD_URL = 'https://js.dump.academy/kekstagram/data';
   var picturesTemplate = document.querySelector('#picture').content;
   var picturesList = document.querySelector('.pictures');
   var filterSection = document.querySelector('.img-filters');
@@ -42,7 +42,7 @@
     filterSection.classList.remove('img-filters--inactive');
   };
 
-  window.backend.load(loadUrl, successHandler, errorHandler);
+  window.backend.load(LOAD_URL, successHandler, errorHandler);
 
   window.data = {
     renderDataList: renderDataList,

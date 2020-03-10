@@ -2,6 +2,7 @@
 
 (function () {
   var DEFAULT_VALUE = 100;
+  var DEFAULT_ZERO = 0;
 
   var FILTER_STYLES = {
     none: '',
@@ -115,14 +116,14 @@
   };
 
   var getPercentsByCoordinates = function (total, current) {
-    return Math.round(100 / total * current);
+    return Math.round(DEFAULT_VALUE / total * current);
   };
 
   var onSliderMouseMove = function (evt) {
     var newPosition = evt.pageX - startPosition - levelLineCoordinates.left;
 
-    if (newPosition < 0) {
-      newPosition = 0;
+    if (newPosition < DEFAULT_ZERO) {
+      newPosition = DEFAULT_ZERO;
     } else if (newPosition > levelLineWidth) {
       newPosition = levelLineWidth;
     }
@@ -138,7 +139,7 @@
     var scaleValueElement = document.querySelector('.scale__control--value');
     var image = document.querySelector('.img-upload__preview');
     scaleValueElement.value = value + '%';
-    image.style.transform = 'scale(' + value / 100 + ')';
+    image.style.transform = 'scale(' + value / DEFAULT_VALUE + ')';
   };
 
   var resetSettings = function () {
@@ -163,7 +164,7 @@
   var renderFilteredImage = function (chosenFilter) {
     if (FILTER_STYLES[chosenFilter]) {
       var name = FILTER_STYLES[chosenFilter].name;
-      var value = FILTER_STYLES[chosenFilter].max / 100 * currentEffectLevel;
+      var value = FILTER_STYLES[chosenFilter].max / DEFAULT_VALUE * currentEffectLevel;
       var type = FILTER_STYLES[chosenFilter].type;
       imagePreview.style.filter = name + '(' + value + type + ')';
     } else {
