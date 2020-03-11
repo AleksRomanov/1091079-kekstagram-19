@@ -34,7 +34,6 @@
       picturesAll.forEach(function (picture) {
         picture.remove();
       });
-      // picturesListing.innerHTML = '';
 
       var dataCopy = window.pictures.slice();
 
