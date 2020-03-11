@@ -16,9 +16,9 @@
 
   function renderDataList(arrayPictures) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < arrayPictures.length; i++) {
-      fragment.appendChild(getPicture(arrayPictures[i]));
-    }
+    arrayPictures.forEach(function (picture) {
+      fragment.appendChild(getPicture(picture));
+    });
     return picturesList.appendChild(fragment);
   }
 

@@ -30,8 +30,11 @@
       filterActive = document.querySelector('.img-filters__button--active');
       filterActive.classList.remove('img-filters__button--active');
       target.classList.add('img-filters__button--active');
-
-      picturesListing.innerHTML = '';
+      var picturesAll = picturesListing.querySelectorAll('.picture');
+      picturesAll.forEach(function (picture) {
+        picture.remove();
+      });
+      // picturesListing.innerHTML = '';
 
       var dataCopy = window.pictures.slice();
 
@@ -47,7 +50,7 @@
     }
   });
 
-  filterButtons.forEach(function (it) {
-    it.addEventListener('click', onFilterClick);
+  filterButtons.forEach(function (button) {
+    button.addEventListener('click', onFilterClick);
   });
 })();

@@ -18,27 +18,75 @@
   var elementPopupClose = window.utils.pageBody.querySelector('#upload-cancel');
   var hashTagsInput = window.utils.pageBody.querySelector('.text__hashtags');
 
-  var addValidationHashTags = function () {
+
+  function closeImageEditor() {
+    window.utils.hideElement(imageEditorPopup);
+    imageUploadForm.reset();
+    window.filters.resetSettings();
+    clearUploadFileData();
+    document.removeEventListener('keydown', onImageEditorEscPress);
+  }
+
+  function onImageEditorEscPress(evt) {
+    window.utils.isEscEvent(evt, closeImageEditor);
+  }
+
+  function openImageEditorPopup() {
+    window.utils.showElement(imageEditorPopup);
+    document.addEventListener('keydown', onImageEditorEscPress);
+    elementPopupClose.addEventListener('click', function () {
+      window.utils.hideElement(imageEditorPopup);
+    });
+  }
+
+  function clearUploadFileData() {
+    uploadFileArea.value = '';
+  }
+
+  function showUploadStatusMessage(classNameMessage) {
+    var messageTemplate = window.utils.pageBody.querySelector('#' + classNameMessage)
+      .content.querySelector('.' + classNameMessage)
+      .cloneNode(true);
+    mainContainer.appendChild(messageTemplate);
+  }
+
+  var isClickOutside = function (evt, cssSelector) {
+    var target = evt.target;
+    var element = target.closest(cssSelector);
+
+    return !element;
+  };
+
+  function onSuccessWindowOutsideCLick(evt) {
+    if (isClickOutside(evt, '.success__inner')) {
+      removeWindowSuccessUpload();
+    }
+    mainContainer.removeEventListener('click', onSuccessWindowOutsideCLick);
+  }
+
+  function removeWindowSuccessUpload() {
+    var successMessage = window.utils.pageBody.querySelector('.success');
+
+    successMessage.remove();
+
+    mainContainer.removeEventListener('click', onSuccessWindowOutsideCLick);
+    document.removeEventListener('keydown', onSuccessMessageEscPress);
+  }
+
+  function onSuccessMessageEscPress(evt) {
+    window.utils.isEscEvent(evt, removeWindowSuccessUpload);
+  }
+
+
+  function addValidationHashTags() {
     var hashTags = [];
     hashTagsInput.value
       .split(' ')
-
       .forEach(function (hashTag) {
         if (hashTag !== '') {
           hashTags.push(hashTag.toLowerCase());
         }
       });
-    //
-    // var addValidationHashTags = function () {
-    //   var hashTags = hashTagsInput.value
-    //     .split(' ')
-    //
-    //     .filter(function (hashTag) {
-    //       return hashTag !== '';
-    //     })
-    //     .map(function (hashTag) {
-    //       return hashTag.toLowerCase();
-    //     });
 
     var message = '';
 
@@ -47,18 +95,16 @@
     } else if (hashTags.length > HASH_TAGS_LENGTH) {
       message = 'Нельзя указать больше пяти хэш-тегов';
     } else {
-      for (var i = 0; i < hashTags.length; i++) {
-        message = getValidationHashTagsErrorMessage(hashTags, i);
-        if (message) {
-          break;
-        }
-      }
+
+      hashTags.forEach(function (tag, index) {
+        message = getValidationHashTagsErrorMessage(hashTags, index);
+        return !!message;
+      });
     }
-
     hashTagsInput.setCustomValidity(message);
-  };
+  }
 
-  var getValidationHashTagsErrorMessage = function (hashTags, i) {
+  function getValidationHashTagsErrorMessage(hashTags, i) {
     var message = '';
     if (hashTags[i].charAt(0) === '') {
       message = '';
@@ -76,88 +122,19 @@
       message = 'Максимальная длина одного хэш-тега 20 символов';
     }
     return message;
-  };
-  // elementPopupClose.addEventListener('click', function () {
-  //   closeImageEditorPopup(imageEditorPopup, window.utils.isEscEvent);
-  // });
+  }
 
-  // elementPopupClose.addEventListener('keydown', function (evt) {
-  //   if (evt.keyCode === window.utils.KEY_CODE.SPACE) {
-  //     closeImageEditorPopup(imageEditorPopup, window.utils.isEscEvent);
-  //   }
-  // });
-
-  var eventAction = function (evt) {
-    if (evt.keyCode === window.utils.KEY_CODE.SPACE) {
-      closeImageEditorPopup(imageEditorPopup, window.utils.isEscEvent);
-    }
-  };
-
-  var closeImageEditorPopup = function (imageEditor, closingKeyCode) {
-    window.utils.hideElement(imageEditor);
-    document.removeEventListener('keydown', eventAction);
-    window.utils.closeOnPressKey(event, imageEditor, closingKeyCode);
-    window.filters.resetSettings();
-    clearForm();
-    elementPopupClose.addEventListener('keydown', eventAction);
-  };
-
-  var openImageEditorPopup = function (imageEditor, closingKeyCode) {
-    window.utils.showElement(imageEditor);
-    // document.addEventListener('keydown', eventAction);
-    elementPopupClose.addEventListener('keydown', eventAction);
-    window.utils.closeOnPressKey(event, imageEditor, closingKeyCode);
-  };
-
-  var clearForm = function () {
-    uploadFileArea.value = '';
-  };
-  var showUploadStatusMessage = function (classNameMessage) {
-    var messageTemplate = window.utils.pageBody.querySelector('#' + classNameMessage)
-      .content.querySelector('.' + classNameMessage)
-      .cloneNode(true);
-    mainContainer.appendChild(messageTemplate);
-  };
-  var isClickOutside = function (evt, cssSelector) {
-    var target = evt.target;
-    var element = target.closest(cssSelector);
-
-    return !element;
-  };
-
-  var onSuccessWindowOutsideCLick = function (evt) {
-    if (isClickOutside(evt, '.success__inner')) {
-      removeWindowSuccessUpload();
-    }
-    mainContainer.removeEventListener('click', onSuccessWindowOutsideCLick);
-  };
-
-  var removeWindowSuccessUpload = function () {
-    var successMessage = window.utils.pageBody.querySelector('.success');
-
-    successMessage.remove();
-
-    mainContainer.removeEventListener('click', onSuccessWindowOutsideCLick);
-    document.removeEventListener('keydown', onSuccessMessageEscPress);
-  };
-
-  var onSuccessMessageEscPress = function (evt) {
-    var successMessage = window.utils.pageBody.querySelector('.success');
-    window.utils.closeOnPressKey(evt, successMessage, window.utils.isEscEvent);
-    window.utils.isEscEvent(evt, removeWindowSuccessUpload);
-  };
-
-  var onSuccess = function () {
-    closeImageEditorPopup(imageEditorPopup, window.utils.isEscEvent);
+  function onSuccess() {
+    closeImageEditor();
     imageUploadForm.reset();
     showUploadStatusMessage('success');
     var successButton = window.utils.pageBody.querySelector('.success__button');
     mainContainer.addEventListener('click', onSuccessWindowOutsideCLick);
     successButton.addEventListener('click', removeWindowSuccessUpload);
     document.addEventListener('keydown', onSuccessMessageEscPress);
-  };
+  }
 
-  var onErrorWindowOutsideCLick = function (evt) {
+  function onErrorWindowOutsideCLick(evt) {
     if (isClickOutside(evt, '.error__inner')) {
       removeWindowErrorUpload();
       imageUploadForm.reset();
@@ -165,23 +142,23 @@
     }
 
     mainContainer.removeEventListener('click', onErrorWindowOutsideCLick);
-  };
+  }
 
-  var removeWindowErrorUpload = function () {
+  function removeWindowErrorUpload() {
     var errorMessage = document.querySelector('.error');
 
     errorMessage.remove();
     mainContainer.removeEventListener('click', onErrorWindowOutsideCLick);
     document.removeEventListener('keydown', onSuccessMessageEscPress);
-  };
+  }
 
-  var onErrorMessageEscPress = function (evt) {
+  function onErrorMessageEscPress(evt) {
     window.utils.isEscEvent(evt, removeWindowErrorUpload);
     imageUploadForm.reset();
-  };
+  }
 
-  var onError = function () {
-    closeImageEditorPopup(imageEditorPopup, window.utils.isEscEvent);
+  function onError() {
+    window.utils.hideElement(imageEditorPopup);
     showUploadStatusMessage('error');
     var errorButton = document.querySelector('.error__button');
     var errorOverlay = document.querySelector('.error');
@@ -189,22 +166,15 @@
     mainContainer.addEventListener('click', onErrorWindowOutsideCLick);
     document.addEventListener('keydown', onErrorMessageEscPress);
     errorButton.addEventListener('click', function () {
-      openImageEditorPopup(imageEditorPopup, window.utils.isEscEvent);
+      openImageEditorPopup();
       errorOverlay.remove();
     });
-  };
-  hashTagsInput.addEventListener('input', function () {
-    addValidationHashTags();
-  });
+  }
 
-  hashTagsInput.addEventListener('invalid', function (evt) {
-    evt.target.style.boxShadow = INVALID_STYLE;
-  });
 
   uploadFileArea.addEventListener('change', function (evt) {
     var fileName = evt.target.value.toLowerCase();
     var file = uploadFileArea.files[0];
-
 
     var fileFormatMatches = FILE_TYPES.some(function (it) {
       return fileName.endsWith(it);
@@ -214,16 +184,23 @@
       return false;
     } else {
       var reader = new FileReader();
-
       reader.addEventListener('load', function () {
         imgPreviewElement.src = reader.result;
       });
-
       reader.readAsDataURL(file);
     }
-    openImageEditorPopup(imageEditorPopup, window.utils.isEscEvent);
+
+    openImageEditorPopup();
 
     return true;
+  });
+
+  hashTagsInput.addEventListener('input', function () {
+    addValidationHashTags();
+  });
+
+  hashTagsInput.addEventListener('invalid', function (evt) {
+    evt.target.style.boxShadow = INVALID_STYLE;
   });
 
   imageUploadForm.addEventListener('submit', function (evt) {
@@ -234,6 +211,5 @@
 
   window.form = {
     imageUploadBlock: imageUploadBlock,
-    closeImageEditorPopup: closeImageEditorPopup,
   };
 })();
